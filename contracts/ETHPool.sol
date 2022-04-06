@@ -30,7 +30,7 @@ contract ETHPool is Ownable {
     /// @dev Total deposits from all users
     uint256 public totalDepositBalance;
 
-    /// @dev Total rewards in the pool
+    /// @dev Total rewards which will become claimable
     uint256 public rewardPoolBalance;
 
     /// @dev Index of the last reward added

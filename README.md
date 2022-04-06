@@ -2,7 +2,7 @@
 
 This challenge implements ETHPool which provides a service where people can deposit ETH and they will receive weekly rewards. Users must be able to take out their deposits along with their portion of rewards at any time. New rewards are deposited manually into the pool by the ETHPool team each week using a contract function.
 
-##### Requirements and considerations
+### Requirements and considerations
 
 - Only the `Team` can deposit rewards.
   - To keep it simple, let's consider that `Team` is the owner of the contract, which means `Team` address is the deployer of the `ETH Pool` Contract.
@@ -10,14 +10,14 @@ This challenge implements ETHPool which provides a service where people can depo
   - `Team` can deposit rewards at anytime.
 - Users should be able to withdraw their deposits along with their share of rewards considering the time when they deposited.
 
-#### How rewards are calculated
+### How rewards are calculated
 
 Since there is no requirement to use `timestamp` in this project, we can implement something simpler to calculate rewards. This is done by keeping **last reward Index** which is updated everytime a new reward is deposited.  
 Everytime a new reward is deposited, 1) a snapshot of a total deposit balance with 2) newly deposited reward amount is taken.
 So when a new deposit is made to the `ETH Pool`, first, the contract calculates the rewards corresponding to the previous deposits to the user who made the deposit.
 This is done by keeping an index `rewardIndex` which keeps track of the current reward index for that particular user.
 
-#### Deployment to Ropsten and contract interaction
+### Deployment to Ropsten and contract interaction
 
 I have created a Hardhat task to do:
 
@@ -68,22 +68,6 @@ Compile the smart contracts and generate TypeChain artifacts:
 
 ```sh
 $ yarn typechain
-```
-
-### Lint Solidity
-
-Lint the Solidity code:
-
-```sh
-$ yarn lint:sol
-```
-
-### Lint TypeScript
-
-Lint the TypeScript code:
-
-```sh
-$ yarn lint:ts
 ```
 
 ### Test
