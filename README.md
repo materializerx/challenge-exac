@@ -49,6 +49,7 @@ In order to illustrate how the test is performed, I have taken one test scenario
 | 3 | Deposit | | 300 | | 400 | 200 |
 | 4 | Withdraw | 300 | | | 300 | |
 | 5 | Withdraw | | 300 | | 0 | 0 |
+
 **Explanation**
 
 - When A deposits then T deposits then B deposits then A withdraws and finally B withdraws.
