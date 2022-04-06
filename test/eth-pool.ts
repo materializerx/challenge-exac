@@ -1,29 +1,28 @@
 import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
-// import { Signers } from "./types";
 import { expect } from "chai";
 import { artifacts, ethers, waffle } from "hardhat";
 import type { Artifact } from "hardhat/types";
 
-import type { ETHPool } from "../../src/types/contracts/ETHPool";
+import type { ETHPool } from "../src/types/contracts/ETHPool";
 
-// import { ETHPool__factory } from "../src/types";
 let team: SignerWithAddress;
 let userA: SignerWithAddress;
 let userB: SignerWithAddress;
 let treasury: SignerWithAddress;
+let ethPool: ETHPool;
 const BN = ethers.BigNumber;
 
 describe("ETH Pool Unit tests", async () => {
-  let ethPool: ETHPool;
-
-  const signers: SignerWithAddress[] = await ethers.getSigners();
-  team = signers[0];
-  userA = signers[1];
-  userB = signers[2];
-  treasury = signers[19];
+  before(async () => {
+    const signers: SignerWithAddress[] = await ethers.getSigners();
+    team = signers[0];
+    userA = signers[1];
+    userB = signers[2];
+    treasury = signers[19];
+  });
 
   describe("about contract function call requirements", async () => {
-    before(async function () {
+    before(async () => {
       const ethPoolArtifact: Artifact = await artifacts.readArtifact("ETHPool");
       ethPool = <ETHPool>await waffle.deployContract(team, ethPoolArtifact);
     });
@@ -56,7 +55,7 @@ describe("ETH Pool Unit tests", async () => {
   +------+-----------+--------+--------+------+---------+------------------+
   | Time | Operation | User A | User B | Team | Balance | Remaining Reward |
   +------+-----------+--------+--------+------+---------+------------------+
-  |      | Deposit   | 100    |        |      | 100     | 0                |
+  | 1    | Deposit   | 100    |        |      | 100     | 0                |
   +------+-----------+--------+--------+------+---------+------------------+
   | 2    | Deposit   |        | 300    |      | 400     | 0                |
   +------+-----------+--------+--------+------+---------+------------------+
