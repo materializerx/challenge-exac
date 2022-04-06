@@ -9,7 +9,7 @@ import { resolve } from "path";
 import "solidity-coverage";
 
 import "./tasks/accounts";
-import "./tasks/deploy";
+import "./tasks/eth-pool";
 
 dotenvConfig({ path: resolve(__dirname, "./.env") });
 
@@ -34,6 +34,7 @@ const chainIds = {
   "polygon-mainnet": 137,
   "polygon-mumbai": 80001,
   rinkeby: 4,
+  ropsten: 3,
 };
 
 function getChainConfig(chain: keyof typeof chainIds): NetworkUserConfig {
@@ -71,6 +72,7 @@ const config: HardhatUserConfig = {
       polygon: process.env.POLYGONSCAN_API_KEY,
       polygonMumbai: process.env.POLYGONSCAN_API_KEY,
       rinkeby: process.env.ETHERSCAN_API_KEY,
+      ropsten: process.env.ETHERSCAN_API_KEY,
     },
   },
   gasReporter: {
@@ -81,6 +83,7 @@ const config: HardhatUserConfig = {
   },
   networks: {
     hardhat: {
+      gasPrice: 875000000,
       accounts: {
         mnemonic,
       },
@@ -94,6 +97,7 @@ const config: HardhatUserConfig = {
     "polygon-mainnet": getChainConfig("polygon-mainnet"),
     "polygon-mumbai": getChainConfig("polygon-mumbai"),
     rinkeby: getChainConfig("rinkeby"),
+    ropsten: getChainConfig("ropsten"),
   },
   paths: {
     artifacts: "./artifacts",
