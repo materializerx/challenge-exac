@@ -93,7 +93,7 @@ contract ETHPool is Ownable {
     *
     */
     function deposit() external payable {
-        require(msg.value > 0, "Error: deposit amount is zero");
+        require(msg.value > 0, "Error: deposit amount is ZERO");
 
         // calculate the claimable reward amount corresponding to the user `msg.sender` for newly added rewards.
         userAccounts[msg.sender].claimableReward += computeClaimableReward(msg.sender);
@@ -123,7 +123,7 @@ contract ETHPool is Ownable {
      * - msg.value should be greater than ZERO.
      */
     function depositReward() public payable onlyOwner {
-        require(msg.value > 0, "Error: deposit amount is zero");
+        require(msg.value > 0, "Error: deposit amount is ZERO");
 
         // add new reward with balance snapshot.
         rewardSnapshots.push(RewardSnapshotAt({ totalDepositBalance: totalDepositBalance, reward: msg.value }));

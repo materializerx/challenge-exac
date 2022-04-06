@@ -7,15 +7,11 @@ import type { Artifact } from "hardhat/types";
 import type { ETHPool } from "../../src/types/contracts/ETHPool";
 
 // import { ETHPool__factory } from "../src/types";
-
-const BN = ethers.BigNumber;
-// const Decimals = BN.from(18);
-// const ETH = BN.from(10).pow(Decimals);
-
 let team: SignerWithAddress;
 let userA: SignerWithAddress;
 let userB: SignerWithAddress;
 let treasury: SignerWithAddress;
+const BN = ethers.BigNumber;
 
 describe("ETH Pool Unit tests", async () => {
   let ethPool: ETHPool;
@@ -26,11 +22,33 @@ describe("ETH Pool Unit tests", async () => {
   userB = signers[2];
   treasury = signers[19];
 
-  // describe("about requirements", async () => {
-  //   it("should revert when depositing 0 ETH", async function () {
-  //     await expect(ethPool.connect(userA).deposit({value: ETH.mul(0)})).to.be.revertedWith("deposit amount is 0");
-  //   });
-  // });
+  describe("about contract function call requirements", async () => {
+    before(async function () {
+      const ethPoolArtifact: Artifact = await artifacts.readArtifact("ETHPool");
+      ethPool = <ETHPool>await waffle.deployContract(team, ethPoolArtifact);
+    });
+
+    it("should revert the transaction when depositing 0 ETH", async () => {
+      // deposit 0 ETH
+      const tx = ethPool.connect(userA).deposit({ value: ETH("0.0") });
+      // revert the transaction
+      await expect(tx).to.be.revertedWith("Error: deposit amount is ZERO");
+    });
+
+    it("should revert the transaction when depositing Reward of 0 ETH", async () => {
+      // deposit reward 0 ETH
+      const tx = ethPool.connect(team).depositReward({ value: ETH("0.0") });
+      // revert the transaction
+      await expect(tx).to.be.revertedWith("Error: deposit amount is ZERO");
+    });
+
+    it("only the owner is allowed to deposit reward", async () => {
+      // deposit reward 100 ETH as User A
+      const tx = ethPool.connect(userA).depositReward({ value: ETH("100.0") });
+      // revert the transaction
+      await expect(tx).to.be.revertedWith("Ownable: caller is not the owner");
+    });
+  });
 
   describe(`A deposits 100, and B deposits 300 for a total of 400 in the pool. 
   Now A has 25% of the pool and B has 75%. 
@@ -60,7 +78,7 @@ describe("ETH Pool Unit tests", async () => {
     // Operation at Time 1
     it("should deposit 100 ETH from User A", async () => {
       // deposit 100 ETH
-      const tx = await ethPool.connect(userA).deposit({ value: ethers.utils.parseEther("100.0") });
+      const tx = await ethPool.connect(userA).deposit({ value: ETH("100.0") });
 
       // emit `Deposit` event
       expect(tx).to.emit(ethPool, "Deposit");
@@ -73,7 +91,7 @@ describe("ETH Pool Unit tests", async () => {
     // Operation at Time 2
     it("should deposit 300 ETH from User B", async () => {
       // User B deposits 300 ETH
-      const tx = await ethPool.connect(userB).deposit({ value: ethers.utils.parseEther("300.0") });
+      const tx = await ethPool.connect(userB).deposit({ value: ETH("300.0") });
 
       // emit `Deposit` event
       expect(tx).to.emit(ethPool, "Deposit");
@@ -86,7 +104,7 @@ describe("ETH Pool Unit tests", async () => {
     // Operation at Time 3
     it("should deposit 200 ETH of Reward from Team", async () => {
       // Team deposits reward of 200 ETH
-      const tx = await ethPool.connect(team).depositReward({ value: ethers.utils.parseEther("200.0") });
+      const tx = await ethPool.connect(team).depositReward({ value: ETH("200.0") });
       const rewardBalance = await ethPool.connect(team).rewardPoolBalance();
 
       // emit `RewardAdded` event
@@ -173,7 +191,7 @@ describe("ETH Pool Unit tests", async () => {
     // Operation at Time 1
     it("should deposit 100 ETH from User A", async () => {
       // User A deposits 100 ETH
-      const tx = await ethPool.connect(userA).deposit({ value: ethers.utils.parseEther("100.0") });
+      const tx = await ethPool.connect(userA).deposit({ value: ETH("100.0") });
 
       // emit `Deposit` event
       expect(tx).to.emit(ethPool, "Deposit");
@@ -186,7 +204,7 @@ describe("ETH Pool Unit tests", async () => {
     // Operation at Time 2
     it("should deposit 200 ETH of Reward from Team", async () => {
       // Team deposits a reward of 200 ETH
-      const tx = await ethPool.connect(team).depositReward({ value: ethers.utils.parseEther("200.0") });
+      const tx = await ethPool.connect(team).depositReward({ value: ETH("200.0") });
       const rewardBalance = await ethPool.connect(userA).rewardPoolBalance();
 
       // emit `RewardAdded` event
@@ -203,7 +221,7 @@ describe("ETH Pool Unit tests", async () => {
     // Operation at Time 3
     it("should deposit 300 ETH from User B", async () => {
       // User B deposits 300 ETH
-      const tx = await ethPool.connect(userB).deposit({ value: ethers.utils.parseEther("300.0") });
+      const tx = await ethPool.connect(userB).deposit({ value: ETH("300.0") });
 
       // emit `Deposit` event
       expect(tx).to.emit(ethPool, "Deposit");
@@ -297,7 +315,7 @@ describe("ETH Pool Unit tests", async () => {
     // Operation at Time 1
     it("should deposit 100 ETH from User A", async () => {
       // deposit 100 ETH
-      const tx = await ethPool.connect(userA).deposit({ value: ethers.utils.parseEther("100.0") });
+      const tx = await ethPool.connect(userA).deposit({ value: ETH("100.0") });
 
       // emit `Deposit` event
       expect(tx).to.emit(ethPool, "Deposit");
@@ -310,7 +328,7 @@ describe("ETH Pool Unit tests", async () => {
     // Operation at Time 2
     it("should deposit 300 ETH from User B", async () => {
       // User B deposits 300 ETH
-      const tx = await ethPool.connect(userB).deposit({ value: ethers.utils.parseEther("300.0") });
+      const tx = await ethPool.connect(userB).deposit({ value: ETH("300.0") });
 
       // emit `Deposit` event
       expect(tx).to.emit(ethPool, "Deposit");
@@ -323,7 +341,7 @@ describe("ETH Pool Unit tests", async () => {
     // Operation at Time 3
     it("should deposit 200 ETH of Reward from Team", async () => {
       // Team deposits reward of 200 ETH
-      const tx = await ethPool.connect(team).depositReward({ value: ethers.utils.parseEther("200.0") });
+      const tx = await ethPool.connect(team).depositReward({ value: ETH("200.0") });
       const rewardBalance = await ethPool.connect(userA).rewardPoolBalance();
 
       // emit `RewardAdded` event
@@ -340,7 +358,7 @@ describe("ETH Pool Unit tests", async () => {
     // Operation at Time 4
     it("should deposit 100 ETH from User A", async () => {
       // deposit 100 ETH
-      const tx = await ethPool.connect(userA).deposit({ value: ethers.utils.parseEther("100.0") });
+      const tx = await ethPool.connect(userA).deposit({ value: ETH("100.0") });
 
       // emit `Deposit` event
       expect(tx).to.emit(ethPool, "Deposit");
@@ -353,7 +371,7 @@ describe("ETH Pool Unit tests", async () => {
     // Operation at Time 5
     it("should deposit 300 ETH from User B", async () => {
       // deposit 300 ETH
-      const tx = await ethPool.connect(userB).deposit({ value: ethers.utils.parseEther("300.0") });
+      const tx = await ethPool.connect(userB).deposit({ value: ETH("300.0") });
 
       // emit `Deposit` event
       expect(tx).to.emit(ethPool, "Deposit");
@@ -366,7 +384,7 @@ describe("ETH Pool Unit tests", async () => {
     // Operation at Time 6
     it("should deposit 200 ETH from User A", async () => {
       // deposit 200 ETH
-      const tx = await ethPool.connect(userA).deposit({ value: ethers.utils.parseEther("200.0") });
+      const tx = await ethPool.connect(userA).deposit({ value: ETH("200.0") });
 
       // emit `Deposit` event
       expect(tx).to.emit(ethPool, "Deposit");
@@ -379,7 +397,7 @@ describe("ETH Pool Unit tests", async () => {
     // Operation at Time 7
     it("should deposit 300 ETH from User B", async () => {
       // deposit 300 ETH
-      const tx = await ethPool.connect(userB).deposit({ value: ethers.utils.parseEther("300.0") });
+      const tx = await ethPool.connect(userB).deposit({ value: ETH("300.0") });
 
       // emit `Deposit` event
       expect(tx).to.emit(ethPool, "Deposit");
@@ -392,7 +410,7 @@ describe("ETH Pool Unit tests", async () => {
     // Operation at Time 8
     it("should deposit 200 ETH of Reward from Team", async () => {
       // Team deposits reward of 200 ETH
-      const tx = await ethPool.connect(team).depositReward({ value: ethers.utils.parseEther("200.0") });
+      const tx = await ethPool.connect(team).depositReward({ value: ETH("200.0") });
       const rewardBalance = await ethPool.connect(team).rewardPoolBalance();
 
       // emit `RewardAdded` event
@@ -409,7 +427,7 @@ describe("ETH Pool Unit tests", async () => {
     // Operation at Time 9
     it("should deposit 300 ETH of Reward from Team", async () => {
       // Team deposits reward of 300 ETH
-      const tx = await ethPool.connect(team).depositReward({ value: ethers.utils.parseEther("300.0") });
+      const tx = await ethPool.connect(team).depositReward({ value: ETH("300.0") });
       const rewardBalance = await ethPool.connect(team).rewardPoolBalance();
 
       // emit `RewardAdded` event
@@ -497,7 +515,7 @@ async function setBalance(account: SignerWithAddress, balance: number): Promise<
   let tx = {
     to: account.address,
     // Convert currency unit from ether to wei
-    value: ethers.utils.parseEther(balance.toString()),
+    value: ETH(balance.toString()),
   };
 
   // Send a transaction from treasury account
@@ -506,4 +524,8 @@ async function setBalance(account: SignerWithAddress, balance: number): Promise<
   });
 
   // console.log("account balance after : ", await account.getBalance())
+}
+
+function ETH(value: string) {
+  return ethers.utils.parseEther(value);
 }
