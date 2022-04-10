@@ -10,5 +10,7 @@ export type { Ownable } from "./@openzeppelin/contracts/access/Ownable";
 export { Ownable__factory } from "./factories/@openzeppelin/contracts/access/Ownable__factory";
 export type { ETHPool } from "./contracts/ETHPool";
 export { ETHPool__factory } from "./factories/contracts/ETHPool__factory";
+export type { ETHPoolV2 } from "./contracts/ETHPoolV2";
+export { ETHPoolV2__factory } from "./factories/contracts/ETHPoolV2__factory";
 export type { Greeter } from "./contracts/Greeter";
 export { Greeter__factory } from "./factories/contracts/Greeter__factory";

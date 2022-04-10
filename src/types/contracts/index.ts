@@ -2,4 +2,5 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { ETHPool } from "./ETHPool";
+export type { ETHPoolV2 } from "./ETHPoolV2";
 export type { Greeter } from "./Greeter";

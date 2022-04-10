@@ -2,4 +2,5 @@
 /* tslint:disable */
 /* eslint-disable */
 export { ETHPool__factory } from "./ETHPool__factory";
+export { ETHPoolV2__factory } from "./ETHPoolV2__factory";
 export { Greeter__factory } from "./Greeter__factory";
