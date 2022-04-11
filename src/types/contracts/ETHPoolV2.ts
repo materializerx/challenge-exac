@@ -28,64 +28,38 @@ import type {
 
 export interface ETHPoolV2Interface extends utils.Interface {
   functions: {
-    "_depositPool()": FunctionFragment;
-    "_notYetRewardableAmount()": FunctionFragment;
-    "_rewardableAmount()": FunctionFragment;
-    "_rewardsPool()": FunctionFragment;
     "accounts(address)": FunctionFragment;
     "deposit()": FunctionFragment;
+    "depositPool()": FunctionFragment;
     "depositReward()": FunctionFragment;
-    "lastRewardDepositTime()": FunctionFragment;
     "owner()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
-    "rewardPoolBalance()": FunctionFragment;
-    "totalDepositBalance()": FunctionFragment;
+    "rewardsPool()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "withdraw()": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "_depositPool"
-      | "_notYetRewardableAmount"
-      | "_rewardableAmount"
-      | "_rewardsPool"
       | "accounts"
       | "deposit"
+      | "depositPool"
       | "depositReward"
-      | "lastRewardDepositTime"
       | "owner"
       | "renounceOwnership"
-      | "rewardPoolBalance"
-      | "totalDepositBalance"
+      | "rewardsPool"
       | "transferOwnership"
       | "withdraw"
   ): FunctionFragment;
 
-  encodeFunctionData(
-    functionFragment: "_depositPool",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "_notYetRewardableAmount",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "_rewardableAmount",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "_rewardsPool",
-    values?: undefined
-  ): string;
   encodeFunctionData(functionFragment: "accounts", values: [string]): string;
   encodeFunctionData(functionFragment: "deposit", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "depositReward",
+    functionFragment: "depositPool",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "lastRewardDepositTime",
+    functionFragment: "depositReward",
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
@@ -94,11 +68,7 @@ export interface ETHPoolV2Interface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "rewardPoolBalance",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "totalDepositBalance",
+    functionFragment: "rewardsPool",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -107,30 +77,14 @@ export interface ETHPoolV2Interface extends utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "withdraw", values?: undefined): string;
 
-  decodeFunctionResult(
-    functionFragment: "_depositPool",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "_notYetRewardableAmount",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "_rewardableAmount",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "_rewardsPool",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "accounts", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "depositReward",
+    functionFragment: "depositPool",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "lastRewardDepositTime",
+    functionFragment: "depositReward",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
@@ -139,11 +93,7 @@ export interface ETHPoolV2Interface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "rewardPoolBalance",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "totalDepositBalance",
+    functionFragment: "rewardsPool",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -153,11 +103,25 @@ export interface ETHPoolV2Interface extends utils.Interface {
   decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
 
   events: {
+    "Deposit(address,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
+    "RewardAdded(address,uint256)": EventFragment;
+    "Withdrawal(address,uint256)": EventFragment;
   };
 
+  getEvent(nameOrSignatureOrTopic: "Deposit"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "RewardAdded"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Withdrawal"): EventFragment;
 }
+
+export interface DepositEventObject {
+  account: string;
+  amount: BigNumber;
+}
+export type DepositEvent = TypedEvent<[string, BigNumber], DepositEventObject>;
+
+export type DepositEventFilter = TypedEventFilter<DepositEvent>;
 
 export interface OwnershipTransferredEventObject {
   previousOwner: string;
@@ -170,6 +134,28 @@ export type OwnershipTransferredEvent = TypedEvent<
 
 export type OwnershipTransferredEventFilter =
   TypedEventFilter<OwnershipTransferredEvent>;
+
+export interface RewardAddedEventObject {
+  account: string;
+  amount: BigNumber;
+}
+export type RewardAddedEvent = TypedEvent<
+  [string, BigNumber],
+  RewardAddedEventObject
+>;
+
+export type RewardAddedEventFilter = TypedEventFilter<RewardAddedEvent>;
+
+export interface WithdrawalEventObject {
+  account: string;
+  amount: BigNumber;
+}
+export type WithdrawalEvent = TypedEvent<
+  [string, BigNumber],
+  WithdrawalEventObject
+>;
+
+export type WithdrawalEventFilter = TypedEventFilter<WithdrawalEvent>;
 
 export interface ETHPoolV2 extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -198,14 +184,6 @@ export interface ETHPoolV2 extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    _depositPool(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    _notYetRewardableAmount(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    _rewardableAmount(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    _rewardsPool(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     accounts(
       arg0: string,
       overrides?: CallOverrides
@@ -222,11 +200,11 @@ export interface ETHPoolV2 extends BaseContract {
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    depositPool(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     depositReward(
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
-
-    lastRewardDepositTime(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
@@ -234,9 +212,7 @@ export interface ETHPoolV2 extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    rewardPoolBalance(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    totalDepositBalance(overrides?: CallOverrides): Promise<[BigNumber]>;
+    rewardsPool(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     transferOwnership(
       newOwner: string,
@@ -247,14 +223,6 @@ export interface ETHPoolV2 extends BaseContract {
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
-
-  _depositPool(overrides?: CallOverrides): Promise<BigNumber>;
-
-  _notYetRewardableAmount(overrides?: CallOverrides): Promise<BigNumber>;
-
-  _rewardableAmount(overrides?: CallOverrides): Promise<BigNumber>;
-
-  _rewardsPool(overrides?: CallOverrides): Promise<BigNumber>;
 
   accounts(
     arg0: string,
@@ -272,11 +240,11 @@ export interface ETHPoolV2 extends BaseContract {
     overrides?: PayableOverrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  depositPool(overrides?: CallOverrides): Promise<BigNumber>;
+
   depositReward(
     overrides?: PayableOverrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
-
-  lastRewardDepositTime(overrides?: CallOverrides): Promise<BigNumber>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
@@ -284,9 +252,7 @@ export interface ETHPoolV2 extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  rewardPoolBalance(overrides?: CallOverrides): Promise<BigNumber>;
-
-  totalDepositBalance(overrides?: CallOverrides): Promise<BigNumber>;
+  rewardsPool(overrides?: CallOverrides): Promise<BigNumber>;
 
   transferOwnership(
     newOwner: string,
@@ -298,14 +264,6 @@ export interface ETHPoolV2 extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    _depositPool(overrides?: CallOverrides): Promise<BigNumber>;
-
-    _notYetRewardableAmount(overrides?: CallOverrides): Promise<BigNumber>;
-
-    _rewardableAmount(overrides?: CallOverrides): Promise<BigNumber>;
-
-    _rewardsPool(overrides?: CallOverrides): Promise<BigNumber>;
-
     accounts(
       arg0: string,
       overrides?: CallOverrides
@@ -320,17 +278,15 @@ export interface ETHPoolV2 extends BaseContract {
 
     deposit(overrides?: CallOverrides): Promise<void>;
 
-    depositReward(overrides?: CallOverrides): Promise<void>;
+    depositPool(overrides?: CallOverrides): Promise<BigNumber>;
 
-    lastRewardDepositTime(overrides?: CallOverrides): Promise<BigNumber>;
+    depositReward(overrides?: CallOverrides): Promise<void>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
-    rewardPoolBalance(overrides?: CallOverrides): Promise<BigNumber>;
-
-    totalDepositBalance(overrides?: CallOverrides): Promise<BigNumber>;
+    rewardsPool(overrides?: CallOverrides): Promise<BigNumber>;
 
     transferOwnership(
       newOwner: string,
@@ -341,6 +297,12 @@ export interface ETHPoolV2 extends BaseContract {
   };
 
   filters: {
+    "Deposit(address,uint256)"(
+      account?: null,
+      amount?: null
+    ): DepositEventFilter;
+    Deposit(account?: null, amount?: null): DepositEventFilter;
+
     "OwnershipTransferred(address,address)"(
       previousOwner?: string | null,
       newOwner?: string | null
@@ -349,28 +311,32 @@ export interface ETHPoolV2 extends BaseContract {
       previousOwner?: string | null,
       newOwner?: string | null
     ): OwnershipTransferredEventFilter;
+
+    "RewardAdded(address,uint256)"(
+      account?: null,
+      amount?: null
+    ): RewardAddedEventFilter;
+    RewardAdded(account?: null, amount?: null): RewardAddedEventFilter;
+
+    "Withdrawal(address,uint256)"(
+      account?: null,
+      amount?: null
+    ): WithdrawalEventFilter;
+    Withdrawal(account?: null, amount?: null): WithdrawalEventFilter;
   };
 
   estimateGas: {
-    _depositPool(overrides?: CallOverrides): Promise<BigNumber>;
-
-    _notYetRewardableAmount(overrides?: CallOverrides): Promise<BigNumber>;
-
-    _rewardableAmount(overrides?: CallOverrides): Promise<BigNumber>;
-
-    _rewardsPool(overrides?: CallOverrides): Promise<BigNumber>;
-
     accounts(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     deposit(
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    depositPool(overrides?: CallOverrides): Promise<BigNumber>;
+
     depositReward(
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
-
-    lastRewardDepositTime(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -378,9 +344,7 @@ export interface ETHPoolV2 extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    rewardPoolBalance(overrides?: CallOverrides): Promise<BigNumber>;
-
-    totalDepositBalance(overrides?: CallOverrides): Promise<BigNumber>;
+    rewardsPool(overrides?: CallOverrides): Promise<BigNumber>;
 
     transferOwnership(
       newOwner: string,
@@ -393,16 +357,6 @@ export interface ETHPoolV2 extends BaseContract {
   };
 
   populateTransaction: {
-    _depositPool(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    _notYetRewardableAmount(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    _rewardableAmount(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    _rewardsPool(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     accounts(
       arg0: string,
       overrides?: CallOverrides
@@ -412,12 +366,10 @@ export interface ETHPoolV2 extends BaseContract {
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    depositPool(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     depositReward(
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    lastRewardDepositTime(
-      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -426,11 +378,7 @@ export interface ETHPoolV2 extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    rewardPoolBalance(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    totalDepositBalance(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    rewardsPool(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     transferOwnership(
       newOwner: string,
