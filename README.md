@@ -22,7 +22,7 @@ And everytime new deposit is made into the pool, at this moment the amount is no
 
 ### Test scenarios illustration
 
-In order to illustrate how the test is performed, I have taken one test scenario from `eth-pool.ts` test file (More scenarios can be checked from the file).
+In order to illustrate how the test is performed, I have taken one test scenario from `eth-poolV2.ts` test file (More scenarios can be checked from the file).
 
 **Test Scenario 1**
 | Time | Operation | User A | User B | Team | Balance | Remaining Rewards |
