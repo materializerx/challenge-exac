@@ -51,27 +51,30 @@ contract ETHPoolV2 is Ownable {
     modifier updateReward(address account) {
         // check if there are any deposit made before last reward has been deposited
         if (accounts[msg.sender].lastDepositTime > 0 && accounts[msg.sender].lastDepositTime <= lastRewardDepositTime) {
+            // deposit amount to calculate the this user's reward share
             uint256 userBalanceToCalcReward = accounts[msg.sender].rewardCalculableAmount;
-            // check if there is a balance to calculate the claimable reward
-            // if it is ZERO, there is no claimable reward to be calculated
-            if (_rewardableAmount > 0) {
-                uint256 claimableRewards = (userBalanceToCalcReward * rewardsPool) / _rewardableAmount;
-                // take out calculated claimable reward amount from the rewards pool
-                rewardsPool -= claimableRewards;
-                // accumulate claimable rewards
-                accounts[msg.sender].claimableRewards += claimableRewards;
-                // balance pending to be rewarded is now became claimable balance
-                accounts[msg.sender].claimableDepositAmount += userBalanceToCalcReward;
-                // reward has been calculated, there are no more balance pending to be rewarded
-                accounts[msg.sender].rewardCalculableAmount = 0;
-                // _rewardableAmount is the denominator, so it should be decremented by this userNotRewardedBalance
-                _rewardableAmount -= userBalanceToCalcReward;
-            }
+            // rewards corresponding to user's deposit amount
+            uint256 claimableRewards = (userBalanceToCalcReward * rewardsPool) / _rewardableAmount;
+            // take out calculated claimable reward amount from the rewards pool
+            rewardsPool -= claimableRewards;
+            // accumulate claimable rewards
+            accounts[msg.sender].claimableRewards += claimableRewards;
+            // balance pending to be rewarded is now became claimable balance
+            accounts[msg.sender].claimableDepositAmount += userBalanceToCalcReward;
+            // reward has been calculated, there are no more balance pending to be rewarded
+            accounts[msg.sender].rewardCalculableAmount = 0;
+            // _rewardableAmount is the denominator, so it should be decremented by this userBalanceToCalcReward
+            _rewardableAmount -= userBalanceToCalcReward;
         }
 
         _;
     }
 
+    /**
+     * @dev Checks if the `amount` is greater than ZERO.
+     *
+     * @param amount The deposit amount.
+     */
     modifier amountNotZero(uint256 amount) {
         require(amount > 0, "Error: deposit amount is ZERO");
 
@@ -114,8 +117,8 @@ contract ETHPoolV2 is Ownable {
     function depositReward() external payable onlyOwner amountNotZero(msg.value) {
         rewardsPool += msg.value;
         lastRewardDepositTime = block.timestamp;
-        // everytime a reward is deposited, amount that was not a available to calculate reward
-        // becomes available to calculate reward
+        // everytime a reward is deposited, the deposit amount that was not yet available to calculate reward
+        // becomes now available to calculate the reward
         _rewardableAmount += _notYetRewardableAmount;
         // reset the value because _notYetRewardableAmount is now available to calculate reward
         _notYetRewardableAmount = 0;

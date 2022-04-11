@@ -24,10 +24,6 @@ declare module "hardhat/types/runtime" {
       name: "ETHPoolV2",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ETHPoolV2__factory>;
-    getContractFactory(
-      name: "Greeter",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.Greeter__factory>;
 
     getContractAt(
       name: "Ownable",
@@ -44,11 +40,6 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.ETHPoolV2>;
-    getContractAt(
-      name: "Greeter",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.Greeter>;
 
     // default types
     getContractFactory(

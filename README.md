@@ -12,15 +12,13 @@ This challenge implements ETHPool which provides a service where people can depo
 
 ### How rewards are calculated
 
-Since there is no requirement to use `timestamp` in this project, reward can be calculated in a simple way. This is done by keeping **last reward Index** which is updated everytime a new reward is deposited.
+In ETHPool V2, no loop is used.
+Instead all information regarding reward calculation is done via `updateRewards()`
+Whenever `deposit()` or `withdraw()` is called, the contract first updates rewards corresponding to that caller(User).
 
-Everytime a new reward is deposited :
+In order to check if there is a reward to be calculated, it checks if there is any deposit made before last reward has been deposited.
 
-1. a snapshot of a total deposit balance and
-2. newly deposited reward amount is taken.
-
-So when a new deposit is made to the `ETH Pool`, the contract calculates the rewards corresponding to the previous deposits to that particular user.
-This is done by keeping an index `rewardIndex` which keeps track of the current reward index for that user.
+And everytime new deposit is made into the pool, at this moment the amount is not yet available to calculate reward. This deposit amount becomes available for reward calculation only after a new reward is deposited after that.
 
 ### Test scenarios illustration
 

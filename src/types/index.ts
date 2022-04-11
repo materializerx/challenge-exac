@@ -12,5 +12,3 @@ export type { ETHPool } from "./contracts/ETHPool";
 export { ETHPool__factory } from "./factories/contracts/ETHPool__factory";
 export type { ETHPoolV2 } from "./contracts/ETHPoolV2";
 export { ETHPoolV2__factory } from "./factories/contracts/ETHPoolV2__factory";
-export type { Greeter } from "./contracts/Greeter";
-export { Greeter__factory } from "./factories/contracts/Greeter__factory";
