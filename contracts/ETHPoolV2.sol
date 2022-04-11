@@ -4,8 +4,6 @@ pragma solidity >=0.8.9;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 
-// import "hardhat/console.sol";
-
 /**
  * @title An implementation of ETH Reward Pool for Exactly Finance Smart Contract Challenge
  * @author materializerX
@@ -14,12 +12,12 @@ import "@openzeppelin/contracts/utils/Address.sol";
 contract ETHPoolV2 is Ownable {
     using Address for address payable;
 
-    /// @dev UserAccount struct containing deposit and claimable reward calculation index and amount.
+    /// @dev UserAccount struct containing deposit&reward amount and reward calculation information
     struct User {
         uint256 claimableDepositAmount;
+        uint256 claimableRewards;
         // reward will be calculated from this value
         uint256 rewardCalculableAmount;
-        uint256 claimableRewards;
         uint256 lastDepositTime;
     }
     /// @dev Available rewards amount
@@ -76,6 +74,7 @@ contract ETHPoolV2 is Ownable {
 
     modifier amountNotZero(uint256 amount) {
         require(amount > 0, "Error: deposit amount is ZERO");
+
         _;
     }
 
@@ -124,6 +123,17 @@ contract ETHPoolV2 is Ownable {
         emit RewardAdded(msg.sender, msg.value);
     }
 
+    /**
+     * @dev Withdraw all deposit amount with corresponding rewards to msg.sender.
+     *
+     * @notice Withdraw all deposit amount with corresponding rewards to msg.sender.
+     *
+     * Emits a {Withdrawal} event.
+     *
+     * Requirements:
+     *
+     * - msg.sender should have a withdrawable balance greater than ZERO.
+     */
     function withdraw() external payable updateReward(msg.sender) {
         uint256 claimableDepositAmount = accounts[msg.sender].claimableDepositAmount;
         uint256 claimableRewards = accounts[msg.sender].claimableRewards;

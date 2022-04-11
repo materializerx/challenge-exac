@@ -190,8 +190,8 @@ export interface ETHPoolV2 extends BaseContract {
     ): Promise<
       [BigNumber, BigNumber, BigNumber, BigNumber] & {
         claimableDepositAmount: BigNumber;
-        rewardCalculableAmount: BigNumber;
         claimableRewards: BigNumber;
+        rewardCalculableAmount: BigNumber;
         lastDepositTime: BigNumber;
       }
     >;
@@ -230,8 +230,8 @@ export interface ETHPoolV2 extends BaseContract {
   ): Promise<
     [BigNumber, BigNumber, BigNumber, BigNumber] & {
       claimableDepositAmount: BigNumber;
-      rewardCalculableAmount: BigNumber;
       claimableRewards: BigNumber;
+      rewardCalculableAmount: BigNumber;
       lastDepositTime: BigNumber;
     }
   >;
@@ -270,8 +270,8 @@ export interface ETHPoolV2 extends BaseContract {
     ): Promise<
       [BigNumber, BigNumber, BigNumber, BigNumber] & {
         claimableDepositAmount: BigNumber;
-        rewardCalculableAmount: BigNumber;
         claimableRewards: BigNumber;
+        rewardCalculableAmount: BigNumber;
         lastDepositTime: BigNumber;
       }
     >;
